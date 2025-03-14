@@ -3,13 +3,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'git@github.com:hernan97carp/jenkins-pipeline.git', credentialsId: 'github-ssh-key'
+                git url: 'https://github.com/hernan97carp/jenkins-pipeline.git'
             }
         }
         stage('Build') {
             steps {
                 echo 'Building...'
-                bat 'echo Hello World'
+                bat 'echo Hello World' // Usa 'bat' para Windows
             }
         }
     }
