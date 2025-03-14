@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent { label 'main' }
+    
+    environment {
+        appName = "variable"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,6 +16,19 @@ pipeline {
                 echo 'Building...'
                 bat 'echo Hello World'
             }
+        }
+    }
+
+    post {
+        always {
+            echo "delete 'fase always'"
+            deleteDir()
+        }
+        success {
+            echo "echo 'fase success'"
+        }
+        failure {
+            echo "echo 'fase failure'"
         }
     }
 }
