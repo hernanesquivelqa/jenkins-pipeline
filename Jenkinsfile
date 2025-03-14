@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo 'Packaging the app...'
                 bat 'echo Packaged!'
-                archiveArtifacts artifacts: '**/*.jar', allowEmptyArchive: true
+            // archiveArtifacts artifacts: '**/*.jar', allowEmptyArchive: true
             }
         }
 
