@@ -72,15 +72,15 @@ pipeline {
         }
         success {
             echo 'Pipeline succeeded!'
-            mail to: 'tu-email@dominio.com',
-                 subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
-                 body: "El build fue exitoso. Revisa ${env.BUILD_URL}"
+            //mail to: 'email@dominio.com',
+                // subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
+                // body: "El build fue exitoso. Revisa ${env.BUILD_URL}"
         }
         failure {
             echo 'Pipeline failed!'
-            mail to: 'tu-email@dominio.com',
-                 subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
-                 body: "El build falló. Revisa ${env.BUILD_URL}"
+           // mail to: 'email@dominio.com',
+                // subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
+                // body: "El build falló. Revisa ${env.BUILD_URL}"
         }
     }
 }
