@@ -1,0 +1,5 @@
+.DS_Store
+/node_modules
+step-to-install.md
+dist
+chrome-win64
