@@ -8,9 +8,7 @@ pipeline {
                 bat 'npm install'
                 // Crear entorno virtual si no existe y activarlo
                 bat """
-                    if not exist venv (
-                        python -m venv venv
-                    )
+                    python -m venv venv
                     venv\\Scripts\\pip install --upgrade pip
                     venv\\Scripts\\pip install -r requirements.txt
                 """
