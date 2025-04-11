@@ -1,0 +1,2 @@
+pip install pytest selenium pytest-html
+pip install webdriver-manager

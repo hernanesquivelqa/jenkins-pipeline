@@ -1,15 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager 
 import pytest
-import time  # Importa time para pausas
+import time
 
 @pytest.fixture
 def driver():
-    driver = webdriver.Chrome()
-    driver.get("http://localhost:8081")  # Ajusta el puerto según npm start
+    # Uso webdriver-manager para instalar y configurar ChromeDriver automáticamente
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    driver.get("http://localhost:8081")
     yield driver
     driver.quit()
-
+    
 def test_page_loads(driver):
     assert "Todo" in driver.title or "todo" in driver.title.lower()
 @pytest.mark.skip(reason="Omitida temporalmente")

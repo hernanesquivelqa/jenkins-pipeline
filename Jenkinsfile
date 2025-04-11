@@ -1,86 +1,37 @@
 pipeline {
     agent any
-    
-    // Parámetros para personalización
-    parameters {
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Rama a construir')
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Entorno de despliegue')
-    }
-
-    // Variables de entorno dinámicas
-    environment {
-        appName = "mi-app-${env.BUILD_NUMBER}"
-        //MY_CREDENTIALS = credentials('my-secret-id') // Asume que tienes una credencial configurada en Jenkins
-    }
 
     stages {
-        stage('Checkout') {
+        stage('Setup') {
             steps {
-                git url: 'https://github.com/hernan97carp/jenkins-pipeline.git', branch: "${params.BRANCH}"
+                bat 'npm install'
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\activate && pip install -r requirements.txt'
             }
         }
 
-        // Control de errores con try-catch
-        stage('Build') {
+        stage('Start App') {
             steps {
-                script {
-                    try {
-                        echo 'Building...'
-                        bat 'echo Hello World'
-                    } catch (Exception e) {
-                        echo "Error during build: ${e.getMessage()}"
-                        error "Build failed due to an error"
-                    }
-                }
+                bat 'start /B npm run dev'
+                bat 'timeout /T 10'
             }
         }
 
-        // Stage para pruebas
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                bat 'echo Tests passed!'
-            }
-        }
-
-        // Stage para construir un artefacto
-        stage('Package') {
-            steps {
-                echo 'Packaging the app...'
-                bat 'echo Packaged!'
-            // archiveArtifacts artifacts: '**/*.jar', allowEmptyArchive: true
-            }
-        }
-
-        // Stage de despliegue
-        stage('Deploy') {
-            when {
-                expression { params.ENVIRONMENT == 'prod' }
-            }
-            steps {
-                echo "Deploying to ${params.ENVIRONMENT}..."
-                bat 'echo Deployed!'
+                bat 'venv\\Scripts\\activate && pytest tests/test_app.py --html=report.html'
             }
         }
     }
 
-    //Notificaciones
     post {
         always {
-            echo "Cleaning up..."
-            deleteDir()
-        }
-        success {
-            echo 'Pipeline succeeded!'
-            //mail to: 'email@dominio.com',
-                // subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
-                // body: "El build fue exitoso. Revisa ${env.BUILD_URL}"
-        }
-        failure {
-            echo 'Pipeline failed!'
-           // mail to: 'email@dominio.com',
-                // subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
-                // body: "El build falló. Revisa ${env.BUILD_URL}"
+            publishHTML(target: [
+                reportDir: '.',
+                reportFiles: 'report.html',
+                reportName: 'Pytest Results'
+            ])
+            bat 'taskkill /F /IM node.exe || exit 0'
         }
     }
 }
