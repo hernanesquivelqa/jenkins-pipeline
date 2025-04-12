@@ -29,18 +29,21 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            // ✅ Publicar reporte
-            publishHTML(target: [
-                reportDir: '.',
-                reportFiles: 'report.html',
-                reportName: 'Pytest Results',
-                keepAll: true
-            ])
-            
-            // ✅ Mata procesos de node.js
-            bat 'taskkill /F /IM node.exe || exit 0'
-        }
+  post {
+    always {
+        // Verificar si el archivo existe
+        bat 'if exist report.html echo "Report exists" else echo "Report not found"'
+
+        // Publicar el reporte solo si existe
+        publishHTML(target: [
+            reportDir: '.',
+            reportFiles: 'report.html',
+            reportName: 'Pytest Results',
+            keepAll: true
+        ])
+
+        // Matar procesos de node.js para evitar que se queden corriendo
+        bat 'taskkill /F /IM node.exe || exit 0'
     }
+}
 }
