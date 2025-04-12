@@ -2,3 +2,4 @@
 /node_modules
 step-to-install.md
 dist
+venv/
