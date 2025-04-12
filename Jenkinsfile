@@ -22,7 +22,7 @@ pipeline {
             steps {
                 // ✅ Inicia la app en segundo plano
                 bat 'start /B npm run dev'
-                bat 'timeout /T 10'
+                bat 'ping 127.0.0.1 -n 10'
 
                 // ✅ Ejecuta tests
                 bat '%PYTHON% -m pytest tests/test_app.py --html=report.html --self-contained-html'
