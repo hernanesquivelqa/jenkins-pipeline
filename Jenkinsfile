@@ -20,7 +20,7 @@ pipeline {
                 bat 'start /B npm run dev'
                 bat 'timeout /T 10' // Espera 10 segundos
                 bat '%PYTHON% -m pytest'
-            }.
+            }
         }
     }
     post {
