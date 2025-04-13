@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PYTHON = "${env.MY_PYTHON}" // o "python"
+        PYTHON = "${env.MY_PYTHON}"
     }
     stages {
         stage('Setup') {
@@ -14,18 +14,12 @@ pipeline {
                 """
             }
         }
-        stage('Start App and Run Tests') {
+        stage('Run Tests') {
             steps {
-                // Iniciar app
+                // Si la app es necesaria:
                 bat 'start /B npm run dev'
-
-                // Esperar unos segundos
-                bat 'ping 127.0.0.1 -n 10'
-
-                // Ejecutar tests
+                bat 'timeout /T 10' // Espera 10 segundos
                 bat '%PYTHON% -m pytest tests/test_app.py --html=report.html --self-contained-html'
-
-                // Matar node para liberar el puerto o memoria
                 bat 'taskkill /F /IM node.exe || exit 0'
             }
         }
@@ -36,9 +30,9 @@ pipeline {
                 if (fileExists('report.html')) {
                     echo 'Report exists, publishing...'
                     publishHTML(target: [
-                        reportDir: '.',
+                        reportDir: '.', 
                         reportFiles: 'report.html',
-                        reportName: 'Pytest Results',
+                        reportName: 'Pytest Report',
                         keepAll: true
                     ])
                 } else {
