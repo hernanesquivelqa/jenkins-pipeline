@@ -3,3 +3,5 @@
 step-to-install.md
 dist
 venv/
+__pycache__/
+*.pyc
