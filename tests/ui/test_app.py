@@ -1,20 +1,7 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager 
 import pytest
-from selenium.webdriver.common.keys import Keys
 from tests.pages.todo_app_page import TodoAppPage
 
-@pytest.fixture
-def driver():
-    # Uso webdriver-manager para instalar y configurar ChromeDriver automáticamente
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
-    driver.get("http://localhost:8081")
-    yield driver
-    driver.quit()
-    
+
 @pytest.fixture
 def todo_page(driver):
     return TodoAppPage(driver)
